@@ -28,11 +28,11 @@ export function* requestWebsitePorts(action) {
       const getUrlDetailsResponse = yield call(
         axios,{
           method: 'GET',
-          url: `http://ip-api.com/json/${action.requestData.url}`
+          url: `https://ip-api.com/json/${action.requestData.url}`
         }
       )
       const ip = getUrlDetailsResponse.data.query
-      const YOUR_API_KEY = 'N3UaID01ZXljH4QGflH0XfbOo4vIB3IN'
+      const YOUR_API_KEY = ''
       console.log(ip)
       const message = {
       method: 'GET',
