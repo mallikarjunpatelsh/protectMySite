@@ -7,7 +7,11 @@ import produce from 'immer';
 import { TRIGGER,
 FAIL,
 SUCCESS,
-FULLFILL } from './constants';
+FULLFILL,
+REQUEST_WEBSITE_PORTS,
+SUCCESS_WEBSITE_PORTS,
+FAIL_WEBSITE_PORTS
+} from './constants';
 
 export const initialState = {
   loading : false,
@@ -33,6 +37,17 @@ const homeReducer = (state = initialState, action) =>
         break;
       case FAIL:
         draft.error = action.error;
+        break;
+      case REQUEST_WEBSITE_PORTS:
+        draft.loadingShodan = true;
+        break;
+        case SUCCESS_WEBSITE_PORTS:
+        draft.ipData = action.responseData.ipData;
+        draft.loadingShodan = false;
+        break;
+      case FAIL_WEBSITE_PORTS:
+        draft.ipData = action.responseData;
+        draft.loadingShodan = false;
         break;
     }
   });
