@@ -1,7 +1,11 @@
 import { take, call, put, select, takeEvery } from 'redux-saga/effects';
-import { REQUEST,REQUEST_WEBSITE_PORTS } from './constants';
+import { REQUEST,REQUEST_WEBSITE_PORTS,REQUEST_SQL_MAP } from './constants';
 import { successAction, failAction, fullfillAction,
-successWebsitePorts,failWebsitePorts } from './actions';
+successWebsitePorts,failWebsitePorts,
+successSQLMap,
+failSQLMap,
+requestSQLMap
+} from './actions';
 import axios from 'axios';
 export function* request(action) {
   try {
@@ -53,9 +57,32 @@ export function* requestWebsitePorts(action) {
   }
 }
 
+export function* requestSQLMapSaga(action) {
+  try {
+      const sqlMapResponse = yield call(
+        axios,{
+          method: 'GET',
+          url: `http://localhost:8000/sqlmap?website=${action.website}`
+        }
+      )
+      const data = sqlMapResponse.data
+      yield put(
+      successSQLMap({
+  data     
+ }),
+    );
+  } catch (error) {
+    yield put(
+      failSQLMap({
+        error: error,
+      }),
+    );
+  }
+}
+
 // Individual exports for testing
 export default function* homeSaga() {
   yield takeEvery(REQUEST, request);
   yield takeEvery(REQUEST_WEBSITE_PORTS, requestWebsitePorts);
-
+  yield takeEvery(REQUEST_SQL_MAP, requestSQLMapSaga);
 }

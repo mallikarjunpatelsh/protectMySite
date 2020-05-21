@@ -19,7 +19,7 @@ import reducer from './reducer';
 import saga from './saga';
 import messages from './messages';
 
-import { triggerAction, requestAction,requestWebsitePorts } from './actions';
+import { triggerAction, requestAction,requestWebsitePorts, requestSQLMap, tirggerSQLMap } from './actions';
 
 import MainBackgroundWrapper from 'components/MainBackgroundWrapper';
 import BackgroundWrapper from 'components/BackgroundWrapper';
@@ -28,21 +28,47 @@ import TermynalOut from 'components/Termynal';
 import H1Secondary from 'components/H1Secondary';
 import Textfield from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
 import RowWrapper from 'components/RowWrapper';
 import TabItem from '../../components/tabItem';
 import Input from '../../components/Input';
+import H3 from '../../components/H3Secondary';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Progress from '@material-ui/core/CircularProgress'
+const useStyles = makeStyles({
+  root: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+});
 
-export function Home({ state, request, requestShodan }) {
+export function Home({ state, request, requestShodan,requestSQLMap }) {
+  const classes = useStyles();
+
   useInjectReducer({ key: 'home', reducer });
   useInjectSaga({ key: 'home', saga });
 
   const [values, setValues] = useState({});
-  const { loading, emailData, urlData,ipData, ...rest } = state;
+  const {  emailData, urlData,ipData,loadingSqlMap,sqlMapData, ...rest } = state;
   const handleValueChange = event =>
     setValues({ ...values, [event.target.name]: event.target.value });
   const [selected,setSelected] = useState(1);
-
+  const bull = <span className={classes.bullet}>•</span>;
+let loading = true
   return (
     <div>
       <Helmet>
@@ -60,59 +86,104 @@ export function Home({ state, request, requestShodan }) {
 <TabItem icon={'💻'} text={'website'} onClick={()=>setSelected(1)} className={selected===1?'active':''}/>
 <TabItem icon={'🤖'} text={'advance'} onClick={()=>setSelected(2)} className={selected===2?'active':''}/>
         </RowWrapper>
-        <form
-          onSubmit={event => {
-            event.preventDefault();
-            requestShodan(values);
-          }}
-        >
-        <Input 
-        placeholder={'Type in your ip address address here'}
-        onChange={event => handleValueChange(event)}
-        name="url"
-        />
-        <input type="submit" />
-        </form>
-        {JSON.stringify(
-          state.ipData
-        )}
-        {/* <form
-          onSubmit={event => {
-            event.preventDefault();
-            request(values);
-          }}
-        >
-          <Grid
-            container
-            direction="column"
-            justify="center"
-            alignItems="center"
-            spacing={3}
-          >
-            {' '}
-            <Grid item xl={6}>
-              <Textfield
-                variant="outlined"
-                label="email"
-                fullWidth
-                onChange={event => handleValueChange(event)}
-                name="email"
-                type="email"
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Textfield
-                variant="outlined"
-                label="website"
-                fullWidth
-                onChange={event => handleValueChange(event)}
-                name="url"
-                type="url"
-              />
-            </Grid>
+        <Grid container
+        spacing={3} 
+  direction="row"
+  justify="center"
+  alignItems="center">
+          <Grid item 
+>
+            <H3>
+              SQLMap
+            </H3>
           </Grid>
-          <input type="submit" />
-        </form> */}
+          <Grid item>
+            <Textfield
+            placeholder='Enter email here'
+            name = 'sqlMapWebsite'
+            onChange={event=>handleValueChange(event)}
+            ></Textfield>
+          </Grid>
+          <Grid item>
+            <Button
+            onClick={()=>requestSQLMap(values.sqlMapWebsite)}
+            >
+              Test
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid container
+          direction="row"
+          justify="center"
+          alignItems="center">
+            { ( sqlMapData || loadingSqlMap ) && <Grid item>
+        <Card className={classes.root} variant="outlined">
+      <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          SQL Map
+        </Typography>
+        <Typography variant="h5" component="h2">
+          {loadingSqlMap?<>Loading <Progress size={25}/></>:'Results'}
+        </Typography>
+        {JSON.stringify(sqlMapData)}
+      </CardContent>
+      <CardActions>
+        <Button size="small">Copy</Button>
+      </CardActions>
+    </Card>
+    </Grid>}
+    </Grid>
+
+    <Grid container
+        spacing={3} 
+  direction="row"
+  justify="center"
+  alignItems="center">
+          <Grid item 
+>
+            <H3>
+              WP Scan
+            </H3>
+          </Grid>
+          <Grid item>
+            <Textfield
+            placeholder='Enter email here'
+            name = 'wpScanWebsite'
+            onChange={event=>handleValueChange(event)}
+            ></Textfield>
+          </Grid>
+          <Grid item>
+            <Button
+            onClick={()=>requestSQLMap(values.wpScanWebsite)}
+            >
+              Test
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid container
+          direction="row"
+          justify="center"
+          alignItems="center">
+            { ( sqlMapData || loadingSqlMap ) && <Grid item>
+        <Card className={classes.root} variant="outlined">
+      <CardContent>
+        <Typography className={classes.title} color="textSecondary" gutterBottom>
+          SQLMap
+        </Typography>
+        <Typography variant="h5" component="h2">
+          {loadingSqlMap?<>Loading <Progress size={25}/></>:'Results'}
+        </Typography>
+        {JSON.stringify(sqlMapData)}
+      </CardContent>
+      <CardActions>
+        <Button size="small">Copy</Button>
+      </CardActions>
+    </Card>
+    </Grid>}
+    </Grid>
+
+
+
       </BackgroundWrapper>
     </div>
   );
@@ -136,6 +207,10 @@ function mapDispatchToProps(dispatch) {
     requestShodan: data => {
       dispatch(requestWebsitePorts(data));
     },
+    requestSQLMap: website => {
+      dispatch(tirggerSQLMap())
+      dispatch(requestSQLMap(website))
+    }
   };
 }
 
