@@ -1,12 +1,16 @@
 import { take, call, put, select, takeEvery } from 'redux-saga/effects';
-import { REQUEST,REQUEST_WEBSITE_PORTS,REQUEST_SQL_MAP } from './constants';
-import { successAction, failAction, fullfillAction,
-successWebsitePorts,failWebsitePorts,
-successSQLMap,
-failSQLMap,
-requestSQLMap
-} from './actions';
 import axios from 'axios';
+import { REQUEST, REQUEST_WEBSITE_PORTS, REQUEST_SQL_MAP } from './constants';
+import {
+  successAction,
+  failAction,
+  fullfillAction,
+  successWebsitePorts,
+  failWebsitePorts,
+  successSQLMap,
+  failSQLMap,
+  requestSQLMap,
+} from './actions';
 export function* request(action) {
   try {
     alert(JSON.stringify(action.requestData));
@@ -19,7 +23,7 @@ export function* request(action) {
   } catch (error) {
     yield put(
       failAction({
-        error: error,
+        error,
       }),
     );
   } finally {
@@ -29,19 +33,17 @@ export function* request(action) {
 
 export function* requestWebsitePorts(action) {
   try {
-      const getUrlDetailsResponse = yield call(
-        axios,{
-          method: 'GET',
-          url: `https://ip-api.com/json/${action.requestData.url}`
-        }
-      )
-      const ip = getUrlDetailsResponse.data.query
-      const YOUR_API_KEY = ''
-      console.log(ip)
-      const message = {
+    const getUrlDetailsResponse = yield call(axios, {
+      method: 'GET',
+      url: `https://ip-api.com/json/${action.requestData.url}`,
+    });
+    const ip = getUrlDetailsResponse.data.query;
+    const YOUR_API_KEY = '';
+    console.log(ip);
+    const message = {
       method: 'GET',
       url: `https://api.shodan.io/shodan/host/${ip}?key=${YOUR_API_KEY}`,
-      };
+    };
     const response = yield call(axios, message);
     yield put(
       successWebsitePorts({
@@ -51,7 +53,7 @@ export function* requestWebsitePorts(action) {
   } catch (error) {
     yield put(
       failWebsitePorts({
-        error: error,
+        error,
       }),
     );
   }
@@ -59,22 +61,20 @@ export function* requestWebsitePorts(action) {
 
 export function* requestSQLMapSaga(action) {
   try {
-      const sqlMapResponse = yield call(
-        axios,{
-          method: 'GET',
-          url: `http://localhost:8000/sqlmap?website=${action.website}`
-        }
-      )
-      const data = sqlMapResponse.data
-      yield put(
+    const sqlMapResponse = yield call(axios, {
+      method: 'GET',
+      url: `http://localhost:8000/sqlmap?website=${action.website}`,
+    });
+    const { data } = sqlMapResponse;
+    yield put(
       successSQLMap({
-  data     
- }),
+        data,
+      }),
     );
   } catch (error) {
     yield put(
       failSQLMap({
-        error: error,
+        error,
       }),
     );
   }

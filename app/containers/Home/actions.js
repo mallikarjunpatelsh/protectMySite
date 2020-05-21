@@ -16,7 +16,7 @@ import {
   REQUEST_SQL_MAP,
   SUCCESS_SQL_MAP,
   FAIL_SQL_MAP,
-  TRIGGER_SQL_MAP
+  TRIGGER_SQL_MAP,
 } from './constants';
 
 export function requestWebsitePorts(data) {
@@ -63,7 +63,7 @@ export function successSQLMap(resultData) {
 export function failSQLMap(error) {
   return {
     type: FAIL_SQL_MAP,
-    error: error,
+    error,
   };
 }
 export function triggerAction() {

@@ -4,30 +4,31 @@
  *
  */
 import produce from 'immer';
-import { TRIGGER,
-FAIL,
-SUCCESS,
-FULLFILL,
-REQUEST_WEBSITE_PORTS,
-SUCCESS_WEBSITE_PORTS,
-FAIL_WEBSITE_PORTS,
-REQUEST_SQL_MAP,
-SUCCESS_SQL_MAP,
-FAIL_SQL_MAP,
-TRIGGER_SQL_MAP
+import {
+  TRIGGER,
+  FAIL,
+  SUCCESS,
+  FULLFILL,
+  REQUEST_WEBSITE_PORTS,
+  SUCCESS_WEBSITE_PORTS,
+  FAIL_WEBSITE_PORTS,
+  REQUEST_SQL_MAP,
+  SUCCESS_SQL_MAP,
+  FAIL_SQL_MAP,
+  TRIGGER_SQL_MAP,
 } from './constants';
 
 export const initialState = {
-  loading : false,
-  urlData : {},
-  emailData : {},
-  error : false,
+  loading: false,
+  urlData: {},
+  emailData: {},
+  error: false,
   loadingSqlMap: false,
 };
 
 /* eslint-disable default-case, no-param-reassign */
 const homeReducer = (state = initialState, action) =>
-  produce(state, (draft) => {
+  produce(state, draft => {
     switch (action.type) {
       case TRIGGER:
         draft.loading = true;
@@ -36,7 +37,7 @@ const homeReducer = (state = initialState, action) =>
         draft.loading = false;
         break;
       case SUCCESS:
-        const {emailData,urlData} = action.responseData
+        const { emailData, urlData } = action.responseData;
         draft.emailData = emailData;
         draft.urlData = urlData;
         break;
@@ -46,7 +47,7 @@ const homeReducer = (state = initialState, action) =>
       case REQUEST_WEBSITE_PORTS:
         draft.loadingShodan = true;
         break;
-        case SUCCESS_WEBSITE_PORTS:
+      case SUCCESS_WEBSITE_PORTS:
         draft.ipData = action.responseData.ipData;
         draft.loadingShodan = false;
         break;
@@ -58,7 +59,7 @@ const homeReducer = (state = initialState, action) =>
         draft.loadingSqlMap = true;
         break;
       case SUCCESS_SQL_MAP:
-        draft.sqlMapData = action.resultData
+        draft.sqlMapData = action.resultData;
         draft.loadingSqlMap = false;
         break;
       case FAIL_SQL_MAP:
