@@ -8,10 +8,10 @@ Protect My Site
 ## Usage
 
 you need to have the following installed 
-[] Ruby
-[] Docker 
-[] Node
-[] Npm 
+- [ ] Ruby
+- [ ]  Docker 
+- [ ]  Node
+- [ ]  Npm 
 
 ```$ git clone https://github.com/98lenvi/protectMySite.git
    $ cd ./ProtectMySite
