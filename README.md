@@ -7,7 +7,11 @@ Software Name as Headline
 
 ## Usage
 
-you need to have docker, node & npm installed (instalation scripts likely to work only in UNIX environments).
+you need to have the following installed 
+[] Ruby
+[] Docker 
+[] Node
+[] Npm 
 
 ```$ git clone https://github.com/98lenvi/protectMySite.git
    $ cd ./ProtectMySite

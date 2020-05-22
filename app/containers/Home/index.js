@@ -34,11 +34,10 @@ import H3 from '../../components/H3Secondary';
 import Input from '../../components/Input';
 import TabItem from '../../components/tabItem';
 import {
-  triggerAction,
-  requestAction,
-  requestWebsitePorts,
   requestSQLMap,
   tirggerSQLMap,
+  tirggerWPScan,
+  requestWPScan,
 } from './actions';
 import messages from './messages';
 import saga from './saga';
@@ -61,7 +60,7 @@ const useStyles = makeStyles({
   },
 });
 
-export function Home({ state, request, requestShodan, requestSQLMap }) {
+export function Home({ state, requestSQLMap, requestWPScan }) {
   const classes = useStyles();
 
   useInjectReducer({ key: 'home', reducer });
@@ -69,18 +68,16 @@ export function Home({ state, request, requestShodan, requestSQLMap }) {
 
   const [values, setValues] = useState({});
   const {
-    emailData,
-    urlData,
-    ipData,
     loadingSqlMap,
     sqlMapData,
+    loadingWpScan,
+    WpScanData,
     ...rest
   } = state;
   const handleValueChange = event =>
     setValues({ ...values, [event.target.name]: event.target.value });
   const [selected, setSelected] = useState(1);
-  const bull = <span className={classes.bullet}>•</span>;
-  const loading = true;
+
   return (
     <div>
       <Helmet>
@@ -185,13 +182,13 @@ export function Home({ state, request, requestShodan, requestSQLMap }) {
             />
           </Grid>
           <Grid item>
-            <Button onClick={() => requestSQLMap(values.wpScanWebsite)}>
+            <Button onClick={() => requestWPScan(values.wpScanWebsite)}>
               Test
             </Button>
           </Grid>
         </Grid>
         <Grid container direction="row" justify="center" alignItems="center">
-          {(sqlMapData || loadingSqlMap) && (
+          {(WpScanData || loadingWpScan) && (
             <Grid item>
               <Card className={classes.root} variant="outlined">
                 <CardContent>
@@ -200,10 +197,10 @@ export function Home({ state, request, requestShodan, requestSQLMap }) {
                     color="textSecondary"
                     gutterBottom
                   >
-                    SQLMap
+                    WPScan
                   </Typography>
                   <Typography variant="h5" component="h2">
-                    {loadingSqlMap ? (
+                    {loadingWpScan ? (
                       <>
                         Loading <Progress size={25} />
                       </>
@@ -211,7 +208,7 @@ export function Home({ state, request, requestShodan, requestSQLMap }) {
                       'Results'
                     )}
                   </Typography>
-                  {JSON.stringify(sqlMapData)}
+                  {JSON.stringify(WpScanData)}
                 </CardContent>
                 <CardActions>
                   <Button size="small">Copy</Button>
@@ -236,16 +233,13 @@ const mapStateToProps = createStructuredSelector({
 function mapDispatchToProps(dispatch) {
   return {
     dispatch,
-    request: data => {
-      dispatch(triggerAction());
-      dispatch(requestAction(data));
-    },
-    requestShodan: data => {
-      dispatch(requestWebsitePorts(data));
-    },
     requestSQLMap: website => {
       dispatch(tirggerSQLMap());
       dispatch(requestSQLMap(website));
+    },
+    requestWPScan: website => {
+      dispatch(tirggerWPScan());
+      dispatch(requestWPScan(website));
     },
   };
 }

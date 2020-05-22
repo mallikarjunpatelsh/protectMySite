@@ -15,7 +15,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production webpack --config internals/webpack/webpack.prod.babel.js --color -p --progress --hide-modules --display-optimization-bailout",
     "start_all": "pm2 start ./app/api/index1.js ; cross-env NODE_ENV=development node server",
-    "install_all": "docker pull paoloo/sqlmap ; npm install yarn -g ; npm install pm2 -g ; yarn ; cd ./app/api ; yarn",
+    "install_all": "sudo gem install wpscan ; docker pull paoloo/sqlmap ; npm install yarn -g ; npm install pm2 -g ; yarn ; cd ./app/api ; yarn",
     "start_web_app":"cross-env NODE_ENV=development node server",
     "start_api":"node ./app/api/index1.js"
   },

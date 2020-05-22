@@ -1,63 +1,14 @@
 import { take, call, put, select, takeEvery } from 'redux-saga/effects';
 import axios from 'axios';
-import { REQUEST, REQUEST_WEBSITE_PORTS, REQUEST_SQL_MAP } from './constants';
+import { REQUEST_SQL_MAP,
+         REQUEST_WP_SCAN,
+  } from './constants';
 import {
-  successAction,
-  failAction,
-  fullfillAction,
-  successWebsitePorts,
-  failWebsitePorts,
   successSQLMap,
   failSQLMap,
-  requestSQLMap,
-} from './actions';
-export function* request(action) {
-  try {
-    alert(JSON.stringify(action.requestData));
-    yield put(
-      successAction({
-        urlData: 'dummy',
-        emailData: 'dummy',
-      }),
-    );
-  } catch (error) {
-    yield put(
-      failAction({
-        error,
-      }),
-    );
-  } finally {
-    yield put(fullfillAction());
-  }
-}
-
-export function* requestWebsitePorts(action) {
-  try {
-    const getUrlDetailsResponse = yield call(axios, {
-      method: 'GET',
-      url: `https://ip-api.com/json/${action.requestData.url}`,
-    });
-    const ip = getUrlDetailsResponse.data.query;
-    const YOUR_API_KEY = '';
-    console.log(ip);
-    const message = {
-      method: 'GET',
-      url: `https://api.shodan.io/shodan/host/${ip}?key=${YOUR_API_KEY}`,
-    };
-    const response = yield call(axios, message);
-    yield put(
-      successWebsitePorts({
-        ipData: response.data,
-      }),
-    );
-  } catch (error) {
-    yield put(
-      failWebsitePorts({
-        error,
-      }),
-    );
-  }
-}
+  successWPScan,
+  failWPScan
+  } from './actions';
 
 export function* requestSQLMapSaga(action) {
   try {
@@ -80,9 +31,29 @@ export function* requestSQLMapSaga(action) {
   }
 }
 
+export function* requestWPScanSaga(action) {
+  try {
+    const wpScanResponse = yield call(axios, {
+      method: 'GET',
+      url: `http://localhost:8000/wpscan?website=${action.website}`,
+    });
+    const { data } = wpScanResponse;
+    yield put(
+      successWPScan({
+        data,
+      }),
+    );
+  } catch (error) {
+    yield put(
+      failWPScan({
+        error,
+      }),
+    );
+  }
+}
+
 // Individual exports for testing
 export default function* homeSaga() {
-  yield takeEvery(REQUEST, request);
-  yield takeEvery(REQUEST_WEBSITE_PORTS, requestWebsitePorts);
   yield takeEvery(REQUEST_SQL_MAP, requestSQLMapSaga);
+  yield takeEvery(REQUEST_WP_SCAN, requestWPScanSaga);
 }

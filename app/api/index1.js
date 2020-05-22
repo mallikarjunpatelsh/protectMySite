@@ -27,6 +27,28 @@ app.get('/sqlmap', async function(req, res) {
   );
 });
 
+app.get('/wpscan', async function(req, res) {
+  console.log(req.query.website);
+  const { exec } = require('child_process');
+//TODO - Add API KEY for detailed result
+//TODO - remove header (WPScan)
+  exec(
+    `wpscan --url ${req.query.website}`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        return;
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+      }
+      console.log(`stdout: ${stdout}`);
+      res.end(stdout);
+    },
+  );
+});
+
 var server = app.listen(8000, function() {
   const host = server.address().address;
   const { port } = server.address();

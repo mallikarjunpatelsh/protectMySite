@@ -5,40 +5,15 @@
  */
 
 import {
-  TRIGGER,
-  REQUEST,
-  SUCCESS,
-  FAIL,
-  FULLFILL,
-  REQUEST_WEBSITE_PORTS,
-  SUCCESS_WEBSITE_PORTS,
-  FAIL_WEBSITE_PORTS,
   REQUEST_SQL_MAP,
   SUCCESS_SQL_MAP,
   FAIL_SQL_MAP,
   TRIGGER_SQL_MAP,
+  TRIGGER_WP_SCAN,
+  REQUEST_WP_SCAN,
+  SUCCESS_WP_SCAN,
+  FAIL_WP_SCAN,
 } from './constants';
-
-export function requestWebsitePorts(data) {
-  return {
-    type: REQUEST_WEBSITE_PORTS,
-    requestData: data,
-  };
-}
-
-export function successWebsitePorts(data) {
-  return {
-    type: SUCCESS_WEBSITE_PORTS,
-    responseData: data,
-  };
-}
-
-export function failWebsitePorts(data) {
-  return {
-    type: FAIL_WEBSITE_PORTS,
-    responseData: data.error,
-  };
-}
 
 export function tirggerSQLMap() {
   return {
@@ -66,35 +41,30 @@ export function failSQLMap(error) {
     error,
   };
 }
-export function triggerAction() {
+
+export function tirggerWPScan() {
   return {
-    type: TRIGGER,
+    type: TRIGGER_WP_SCAN,
   };
 }
 
-export function requestAction(data) {
+export function requestWPScan(website) {
   return {
-    type: REQUEST,
-    requestData: data,
+    type: REQUEST_WP_SCAN,
+    website,
   };
 }
 
-export function successAction(data) {
+export function successWPScan(resultData) {
   return {
-    type: SUCCESS,
-    responseData: data,
+    type: SUCCESS_WP_SCAN,
+    resultData,
   };
 }
 
-export function failAction(data) {
+export function failWPScan(error) {
   return {
-    type: FAIL,
-    error: data.error,
-  };
-}
-
-export function fullfillAction() {
-  return {
-    type: FULLFILL,
+    type: FAIL_WP_SCAN,
+    error,
   };
 }
