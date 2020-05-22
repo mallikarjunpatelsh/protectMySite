@@ -1,4 +1,4 @@
-Software Name as Headline
+Protect My Site
 ======
 **Protect My Site** is a software for testing vulnerabilities in websites/webapps.
 
