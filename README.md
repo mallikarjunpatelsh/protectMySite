@@ -25,6 +25,7 @@ After that the webapp should be available @ [localhost:3000](https://localhost:3
 ### Contributors on GitHub
 * [Lenvin Gonsalves](https://github.com/98lenvi)
 * [Ashrith Shetty](https://github.com/)
+* [Mallikarjun Patel S H](https://github.com/mallikarjunpatelsh)
 
 ## License 
 * see [LICENSE](https://github.com/username/sw-name/blob/master/LICENSE.md) file
